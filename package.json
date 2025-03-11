@@ -10,7 +10,8 @@
     "dev": "react-router dev",
     "start": "wrangler dev",
     "typecheck": "react-router typegen && tsc",
-    "cf-typegen": "wrangler types"
+    "cf-typegen": "wrangler types",
+    "biome:check": "npx @biomejs/biome check ."
   },
   "dependencies": {
     "@conform-to/react": "^1.2.2",
@@ -34,6 +35,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
     "@cloudflare/workers-types": "^4.20250310.0",
     "@hiogawa/vite-node-miniflare": "^0.1.1",
     "@react-router/dev": "^7.2.0",
@@ -44,7 +46,7 @@
     "@types/service-worker-mock": "^2.0.1",
     "react-router-devtools": "^1.1.0",
     "tailwindcss": "^4.0.12",
-    "typescript": "^5.7.2",
+    "typescript": "^5.8.2",
     "vite": "^5.4.14",
     "vite-tsconfig-paths": "^5.1.4",
     "wrangler": "^3.112.0"

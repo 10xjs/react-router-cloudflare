@@ -1,6 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks";
-
-import { redirect, type Session } from "react-router";
+import { type Session, redirect } from "react-router";
 
 type SessionData = {
   userId?: number;

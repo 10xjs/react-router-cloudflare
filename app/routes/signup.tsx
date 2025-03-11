@@ -2,7 +2,6 @@ import { getFormProps, getInputProps, useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { Form, Link, redirect, useNavigation } from "react-router";
 import { z } from "zod";
-
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -14,7 +13,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 // import { signup } from "~/database/user";
-import { getUserId, setUserId } from "~/lib/session";
+import { getUserId } from "~/lib/session";
 
 import type { Route } from "./+types/signup";
 

@@ -1,0 +1,69 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "ignoreUnknown": false,
+    "ignore": [
+      "dist",
+      "build",
+      "node_modules",
+      "worker-configuration.d.ts",
+      ".react-router/types"
+    ]
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "defaultBranch": "main",
+    "useIgnoreFile": true
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "lineWidth": 80,
+    "lineEnding": "lf"
+  },
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "suspicious": {
+        "recommended": true,
+        "noExplicitAny": "off"
+      },
+      "style": {
+        "recommended": true,
+        "noParameterAssign": "off"
+      },
+      "complexity": {
+        "recommended": true
+      },
+      "security": {
+        "recommended": true
+      },
+      "performance": {
+        "recommended": true
+      },
+      "correctness": {
+        "recommended": true,
+        "noUnusedImports": "warn"
+      },
+      "a11y": {
+        "recommended": true
+      },
+      "nursery": {
+        "recommended": true
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always",
+      "trailingCommas": "es5"
+    }
+  }
+}

@@ -1,11 +1,11 @@
-// https://github.com/jacob-ebey/react-router-cloudflare/blob/main/app/entry.server.tsx
-import type { AppLoadContext, EntryContext } from "react-router";
-import { ServerRouter } from "react-router";
 import { isbot } from "isbot";
 import { renderToReadableStream } from "react-dom/server";
+import type { AppLoadContext, EntryContext } from "react-router";
+import { ServerRouter } from "react-router";
 
 const ABORT_DELAY = 5_000;
 
+// https://github.com/jacob-ebey/react-router-cloudflare/blob/main/app/entry.server.tsx
 export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
@@ -20,10 +20,7 @@ export default async function handleRequest(
   setTimeout(() => controller.abort(), ABORT_DELAY);
 
   const body = await renderToReadableStream(
-    <ServerRouter
-      context={routerContext}
-      url={request.url}
-    />,
+    <ServerRouter context={routerContext} url={request.url} />,
     {
       signal: controller.signal,
       onError(error: unknown) {

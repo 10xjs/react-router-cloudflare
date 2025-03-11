@@ -13,7 +13,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 // import { authenticate } from "~/database/user";
-import { getUserId, setUserId } from "~/lib/session";
+import { getUserId } from "~/lib/session";
 
 import type { Route } from "./+types/login";
 
