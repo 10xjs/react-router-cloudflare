@@ -39,7 +39,8 @@
         "noParameterAssign": "off"
       },
       "complexity": {
-        "recommended": true
+        "recommended": true,
+        "noUselessConstructor": "info"
       },
       "security": {
         "recommended": true

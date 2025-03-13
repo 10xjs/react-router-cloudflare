@@ -1,7 +1,11 @@
-import { type RouteConfig, index, route } from "@react-router/dev/routes";
+import { type RouteConfig, prefix, route } from "@react-router/dev/routes";
 
 export default [
-  index("routes/login.tsx"),
-  route("signup", "routes/signup.tsx"),
+  route("sign-in", "routes/sign-in.tsx"),
+  route("sign-up", "routes/sign-up.tsx"),
+  ...prefix("auth", [
+    route("callback", "routes/auth-callback.tsx"),
+    route("error", "routes/auth-error.tsx"),
+  ]),
   route("dashboard", "routes/dashboard.tsx"),
 ] satisfies RouteConfig;

@@ -1,0 +1,4 @@
+# https://supabase.com/dashboard/project/xxxxx/settings/api
+SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_JWT_SECRET=
+

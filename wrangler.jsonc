@@ -36,7 +36,10 @@
    * Environment Variables
    * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
    */
-  // "vars": { "MY_VARIABLE": "production_value" },
+  "vars": {
+    "SUPABASE_URL": "https://xxxxx.supabase.co",
+    "SUPABASE_ANON_KEY": "xxxxx.xxxxx.xxxxx"
+  },
   /**
    * Note: Use secrets to store sensitive data.
    * https://developers.cloudflare.com/workers/configuration/secrets/
@@ -45,7 +48,8 @@
   "env": {
     "development": {
       "vars": {
-        "SESSION_SECRET": "s3cr3t"
+        "SUPABASE_URL": "https://xxxxx.supabase.co",
+        "SUPABASE_ANON_KEY": "xxxxx.xxxxx.xxxxx"
       },
       "d1_databases": [
         {

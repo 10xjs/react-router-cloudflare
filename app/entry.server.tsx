@@ -11,7 +11,7 @@ export default async function handleRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   routerContext: EntryContext,
-  _loadContext: AppLoadContext
+  loadContext: AppLoadContext
 ) {
   let shellRendered = false;
   const userAgent = request.headers.get("user-agent");
@@ -42,7 +42,7 @@ export default async function handleRequest(
     await body.allReady;
   }
 
-  responseHeaders.set("Content-Type", "text/html");
+  responseHeaders.set("Content-Type", "text/html; charset=utf-8");
   return new Response(body, {
     headers: responseHeaders,
     status: responseStatusCode,

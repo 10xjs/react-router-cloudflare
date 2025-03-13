@@ -2,6 +2,8 @@ import { vitePluginViteNodeMiniflare } from "@hiogawa/vite-node-miniflare";
 import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { mergeWorkerOptions } from "miniflare";
+import type { IncomingHttpHeaders } from "node:http";
+import type { AddressInfo } from "node:net";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import wrangler from "wrangler";
@@ -28,6 +30,7 @@ export default defineConfig(({ isSsrBuild }) => ({
         "react-dom",
         "react-dom/server",
         "react-router",
+        "cookie",
       ],
     },
   },
@@ -45,6 +48,8 @@ export default defineConfig(({ isSsrBuild }) => ({
         delete wranglerOptions.workerOptions.sitePath;
 
         mergeWorkerOptions(options, wranglerOptions.workerOptions);
+
+        options.host = "localhost";
       },
       // allow framework to extend RPC to implement some features on main Vite process and expose them to Workerd
       // (e.g. Remix's DevServerHooks)
@@ -59,6 +64,30 @@ export default defineConfig(({ isSsrBuild }) => ({
         },
       },
     }),
+    {
+      name: "fix-origin",
+      async configureServer(server) {
+        const append = (
+          headers: IncomingHttpHeaders,
+          key: string,
+          value: string
+        ) => {
+          if (typeof headers[key] === "string") {
+            headers[key] = `${headers[key]}, ${value}`;
+          } else if (Array.isArray(headers[key])) {
+            headers[key].push(value);
+          } else {
+            headers[key] = [value];
+          }
+        };
+        server.middlewares.use((req, res, next) => {
+          const port = (server.httpServer?.address() as AddressInfo)?.port;
+          append(req.headers, "x-forwarded-host", `localhost:${port}`);
+          append(req.headers, "x-forwarded-proto", "http");
+          next();
+        });
+      },
+    },
     tailwindcss(),
     reactRouter(),
     tsconfigPaths(),

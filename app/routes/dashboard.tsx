@@ -1,6 +1,8 @@
 import { Form, redirect } from "react-router";
 import { Button } from "~/components/ui/button";
-import { requireUser, setUserId } from "~/lib/session";
+import type { Route } from "./+types/dashboard";
+
+// import { requireUser, setUserId } from "~/lib/session";
 
 export function meta() {
   return [
@@ -9,13 +11,18 @@ export function meta() {
   ];
 }
 
-export function action() {
-  setUserId(undefined);
-  throw redirect("/");
+export async function action({ context }: Route.ActionArgs) {
+  const auth = context.c.get("auth");
+  await auth.signOut();
+  throw redirect("/sign-in");
 }
 
-export function loader() {
-  requireUser();
+export function loader({ context }: Route.LoaderArgs) {
+  const user = context.c.get("user");
+  console.log(user);
+  if (!user) {
+    throw redirect("/sign-in");
+  }
 }
 
 export default function Dashboard() {
