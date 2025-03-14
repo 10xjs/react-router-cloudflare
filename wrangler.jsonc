@@ -5,7 +5,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "white-snowflake-5650",
-  "main": "app/worker/index.ts",
+  "main": "app/entry.worker.ts",
   "compatibility_date": "2025-02-24",
   "compatibility_flags": ["nodejs_compat"],
   "observability": {

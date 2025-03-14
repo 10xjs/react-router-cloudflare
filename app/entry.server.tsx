@@ -1,9 +1,11 @@
+import { QueryClientProvider } from "@tanstack/react-query";
 import { isbot } from "isbot";
 import { renderToReadableStream } from "react-dom/server";
 import type { AppLoadContext, EntryContext } from "react-router";
 import { ServerRouter } from "react-router";
 
-const ABORT_DELAY = 5_000;
+// Reject all pending promises from handler functions after 5 seconds
+const STREAM_TIMEOUT = 5_000;
 
 // https://github.com/jacob-ebey/react-router-cloudflare/blob/main/app/entry.server.tsx
 export default async function handleRequest(
@@ -17,10 +19,14 @@ export default async function handleRequest(
   const userAgent = request.headers.get("user-agent");
 
   const controller = new AbortController();
-  setTimeout(() => controller.abort(), ABORT_DELAY);
+  // Abort the streaming render pass after 6 seconds to allow the rejected
+  // boundaries to be flushed
+  setTimeout(() => controller.abort(), STREAM_TIMEOUT + 1000);
 
   const body = await renderToReadableStream(
-    <ServerRouter context={routerContext} url={request.url} />,
+    <QueryClientProvider client={loadContext.queryClient}>
+      <ServerRouter context={routerContext} url={request.url} />
+    </QueryClientProvider>,
     {
       signal: controller.signal,
       onError(error: unknown) {
@@ -48,3 +54,17 @@ export default async function handleRequest(
     status: responseStatusCode,
   });
 }
+
+// export function handleError(
+//   error: unknown,
+//   {
+//     request,
+//     params,
+//     context,
+//   }: LoaderFunctionArgs<AppLoadContext> | ActionFunctionArgs<AppLoadContext>
+// ) {
+//   if (!request.signal.aborted) {
+//     sendErrorToErrorReportingService(error);
+//     console.error(formatErrorForJsonLogging(error));
+//   }
+// }

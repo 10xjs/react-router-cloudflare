@@ -1,8 +1,9 @@
 import type { GoTrueClient } from "@supabase/auth-js";
+import { QueryClient } from "@tanstack/react-query";
 import { fromHono } from "chanfana";
 import { type Context, Hono } from "hono";
 // import { drizzle } from "drizzle-orm/d1";
-import { createRequestHandler, unstable_setDevServerHooks } from "react-router";
+import { createRequestHandler } from "react-router";
 import { TaskCreate } from "./endpoints/taskCreate";
 import { TaskDelete } from "./endpoints/taskDelete";
 import { TaskFetch } from "./endpoints/taskFetch";
@@ -24,11 +25,19 @@ export type AppContext = Context<AppEnv>;
 declare module "react-router" {
   export interface AppLoadContext {
     c: AppContext;
+    queryClient: QueryClient;
   }
 }
 
 // Start a Hono app
 const app = new Hono<AppEnv>();
+
+if (import.meta.env.DEV) {
+  // https://github.com/facebook/react/issues/32339
+  app.get("/installHook.js.map", (c) => {
+    return c.text("Not found", 404);
+  });
+}
 
 app.use(async function originMiddleware(c, next) {
   c.set("origin", getRequestOrigin(c.req.raw));
@@ -59,21 +68,19 @@ apiV1.post("/tasks", TaskCreate);
 apiV1.get("/tasks/:taskSlug", TaskFetch);
 apiV1.delete("/tasks/:taskSlug", TaskDelete);
 
-const remixHandler = createRequestHandler(
-  // @ts-expect-error - virtual module provided by React Router at build time
-  () => import("virtual:react-router/server-build"),
-  import.meta.env.MODE
-);
-
-// https://github.com/jacob-ebey/react-router-cloudflare/blob/841b9f5eed547e105574965bbf381b4ae1626642/workers/app.ts#L26
 app.use((c) => {
-  if (import.meta.env.DEV) {
-    unstable_setDevServerHooks({
-      getCriticalCss: (c.env as any).__RPC.__reactRouterGetCriticalCss,
-    });
-  }
+  const remixHandler = createRequestHandler(
+    async () => {
+      // @ts-expect-error - virtual module provided by React Router at build time
+      const build = await import("virtual:react-router/server-build");
+      return build;
+    },
+    import.meta.env?.MODE
+  );
 
-  return remixHandler(c.req.raw, { c });
+  const queryClient = new QueryClient();
+
+  return remixHandler(c.req.raw, { c, queryClient });
 });
 
 export default {
